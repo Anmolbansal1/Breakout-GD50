@@ -38,7 +38,8 @@ function love.load()
         ['medium'] = love.graphics.newFont('fonts/font.ttf', 16),
         ['large'] = love.graphics.newFont('fonts/font.ttf', 32)
     }
-    
+    love.graphics.setFont(gFonts['small'])
+
     gTextures = {
         ['background'] = love.graphics.newImage('graphics/background.png'),
         ['main'] = love.graphics.newImage('graphics/breakout.png'),
@@ -47,6 +48,10 @@ function love.load()
         ['partcle'] = love.graphics.newImage('graphics/particle.png')
     }
     
+    gFrames = {
+        ['paddles'] = GenerateQuadsPaddles(gTextures['main'])
+    }
+
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         vsync = true,
         fullscreen = false,
@@ -70,8 +75,21 @@ function love.load()
         ['music']       = love.audio.newSource('sounds/music.wav', 'static')
     }
     
+    
+    -- the state machine we'll be using to transition between various states
+    -- in our game instead of clumping them together in our update and draw
+    -- methods
+    --
+    -- our current game state can be any of the following:
+    -- 1. 'start' (the beginning of the game, where we're told to press Enter)
+    -- 2. 'paddle-select' (where we get to choose the color of our paddle)
+    -- 3. 'serve' (waiting on a key press to serve the ball)
+    -- 4. 'play' (the ball is in play, bouncing between paddles)
+    -- 5. 'victory' (the current level is over, with a victory jingle)
+    -- 6. 'game-over' (the player has lost; display score and allow restart)
     gStateMachine = StateMachine {
-        ['start'] = function() return StartState() end
+        ['start'] = function() return StartState() end,
+        ['play']  = function() return PlayState() end
     }
 
     gStateMachine:change('start')

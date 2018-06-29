@@ -15,6 +15,13 @@ Class = require 'lib/class'
 -- a few global constants, centralized
 require 'src/constants'
 
+-- the rectangular entity the player controls, which deflects the ball
+require 'src/Paddle'
+
+-- utility functions, mainly for splitting our sprite sheet into various Quads
+-- of differing sizes for paddles, balls, bricks, etc.
+require 'src/Util'
+
 -- a basic StateMachine class which will allow us to transition to and from
 -- game states smoothly and avoid monolithic code in one file
 require 'src/StateMachine'
@@ -22,3 +29,4 @@ require 'src/StateMachine'
 -- states in our game
 require 'src/states/BaseState'
 require 'src/states/StartState'
+require 'src/states/PlayState'
