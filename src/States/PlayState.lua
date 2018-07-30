@@ -26,6 +26,7 @@ function PlayState:update(dt)
 			return
 	end
 	
+	-- update positions based on velocity
 	self.paddle:update(dt)
 	self.ball:update(dt)
 
@@ -43,10 +44,13 @@ function PlayState:update(dt)
 		gSounds['paddle-hit']:play()
 	end
 
+	-- detect collision across all bricks with the ball
 	for k, brick in pairs(self.bricks) do
+
+		-- only check collision if we're in play
 		if brick.inPlay and self.ball:collides(brick) then
 
-			self.score = self.score + 10
+			self.score = self.score + (brick.tier * 200 + brick.color * 25)
 
 			brick:hit()
 
@@ -68,6 +72,7 @@ function PlayState:update(dt)
 			end
 
 			self.ball.dy = self.ball.dy * 1.02
+			
 			break
 		end
 	end
